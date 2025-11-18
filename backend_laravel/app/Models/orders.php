@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class orders extends Model
 {
-protected $fillable = ['product_id', 'client_id', 'quantity', 'total_price'];
+protected $fillable = ['product_id', 'customer_id', 'quantity', 'total_price'];
 
 public function product() {
     return $this->belongsTo(Product::class);
 }
 
-public function client() {
-    return $this->belongsTo(Client::class);
+public function customer() {
+    return $this->belongsTo(customer::class);
 }
 
 }

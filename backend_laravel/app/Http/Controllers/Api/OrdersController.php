@@ -7,43 +7,63 @@ use Illuminate\Http\Request;
 
 class OrdersController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        return response()->json(Order::with(['product', 'customer'])->get(), 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    public function create() {}
+
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'customer_id'  => 'required|exists:customers,id',
+            'quantity'   => 'required|integer|min:1',
+        ]);
+
+        $product = Product::find($data['product_id']);
+
+        $data['total_price'] = $product->price * $data['quantity'];
+
+        $order = Order::create($data);
+
+        return response()->json($order, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Order $order)
     {
-        //
+        return response()->json($order->load(['product', 'customer']), 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function edit(Order $order) {}
+
+    public function update(Request $request, Order $order)
     {
-        //
+        $data = $request->validate([
+            'product_id' => 'sometimes|exists:products,id',
+            'customer_id'  => 'sometimes|exists:customers,id',
+            'quantity'   => 'sometimes|integer|min:1',
+        ]);
+
+        if (isset($data['quantity']) || isset($data['product_id'])) {
+            $product_id = $data['product_id'] ?? $order->product_id;
+            $quantity   = $data['quantity'] ?? $order->quantity;
+
+            $product = Product::find($product_id);
+
+            $data['total_price'] = $product->price * $quantity;
+        }
+
+        $order->update($data);
+
+        return response()->json($order, 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Order $order)
     {
-        //
+        $order->delete();
+
+        return response()->json(['message' => 'Commande supprimée'], 200);
     }
 }
