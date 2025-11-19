@@ -1,8 +1,9 @@
 <template>
   <div class="full-width-container">
     <div class="simple-header">
-      <h1>Gestion des Produits</h1>
-     
+      <div class="header-content">
+        <h1>Gestion des Produits</h1>
+      </div>
     </div>
 
     <div class="main-actions" v-if="!showForm && !showList">
@@ -559,35 +560,35 @@ export default {
   width: 100%;
 }
 
+.header-content {
+  width: 90%;
+  margin: 0 auto;
+}
+
 .simple-header h1 {
   font-size: 2.25rem;
   font-weight: 700;
-  margin: 0 0 0.5rem 0;
-  letter-spacing: -0.5px;
-}
-
-.simple-header p {
   margin: 0;
-  font-size: 1.1rem;
-  opacity: 0.9;
-  font-weight: 300;
+  letter-spacing: -0.5px;
 }
 
 .main-actions {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 60vh;
-  padding: 3rem;
+  min-height: 70vh;
+  padding: 3rem 0;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .actions-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 3rem;
-  max-width: 1400px;
-  width: 100%;
+  width: 90%;
+  margin: 0 auto;
+  max-width: 1200px;
 }
 
 .action-card {
@@ -624,14 +625,6 @@ export default {
   color: #158897;
 }
 
-.action-icon svg {
-  transition: transform 0.3s ease;
-}
-
-.action-card:hover .action-icon svg {
-  transform: scale(1.1);
-}
-
 .action-card h3 {
   font-size: 1.8rem;
   font-weight: 600;
@@ -648,12 +641,14 @@ export default {
 
 .full-width-form {
   width: 100%;
-  padding: 2rem;
+  padding: 3rem 0;
+  box-sizing: border-box;
 }
 
 .form-section {
-  max-width: 1400px;
+  width: 90%;
   margin: 0 auto;
+  max-width: 1200px;
 }
 
 .form-card {
@@ -664,6 +659,8 @@ export default {
   border: 1px solid #e1f5fe;
   position: relative;
   overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-card::before {
@@ -728,7 +725,7 @@ export default {
 }
 
 .form-group label {
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: #2d3748;
 }
@@ -741,13 +738,13 @@ export default {
   transition: all 0.3s ease;
   background: white;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .form-control:focus {
   outline: none;
   border-color: #158897;
   box-shadow: 0 0 0 4px rgba(21, 136, 151, 0.1);
-  transform: translateY(-2px);
 }
 
 .form-control.textarea {
@@ -809,7 +806,7 @@ export default {
 }
 
 .radio-label {
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -833,7 +830,7 @@ export default {
 
 .form-actions {
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
   flex-wrap: wrap;
   margin-top: 2rem;
 }
@@ -878,22 +875,27 @@ export default {
 .full-width-list {
   width: 100%;
   padding: 0;
+  box-sizing: border-box;
 }
 
 .list-header {
   background: white;
-  padding: 2.5rem 3rem;
+  padding: 2.5rem 0;
   box-shadow: 0 4px 12px rgba(21, 136, 151, 0.15);
   border-bottom: 1px solid #e1f5fe;
   margin-bottom: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .header-content {
-  max-width: 1400px;
+  width: 90%;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-sizing: border-box;
+  max-width: 1200px;
 }
 
 .header-main {
@@ -920,7 +922,8 @@ export default {
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  font-size: 1.1rem;
 }
 
 .back-btn:hover {
@@ -934,7 +937,7 @@ export default {
   background: rgba(21, 136, 151, 0.1);
   padding: 1rem 2rem;
   border-radius: 25px;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: #158897;
   display: inline-flex;
@@ -944,11 +947,13 @@ export default {
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   gap: 2rem;
-  padding: 3rem;
-  max-width: 1400px;
+  padding: 3rem 0;
+  width: 90%;
   margin: 0 auto;
+  box-sizing: border-box;
+  max-width: 1200px;
 }
 
 .product-card {
@@ -1006,7 +1011,7 @@ export default {
   padding: 0.5rem 1rem;
   border: 2px solid;
   border-radius: 8px;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -1072,7 +1077,7 @@ export default {
 }
 
 .detail-label {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: #718096;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -1107,7 +1112,7 @@ export default {
 .status {
   padding: 0.5rem 1rem;
   border-radius: 20px;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -1129,7 +1134,7 @@ export default {
 }
 
 .product-id {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   color: #9ca3af;
 }
 
@@ -1170,6 +1175,7 @@ export default {
   align-items: center;
   z-index: 1000;
   padding: 2rem;
+  box-sizing: border-box;
 }
 
 .modal-content {
@@ -1178,11 +1184,12 @@ export default {
   padding: 2.5rem;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
   border: 1px solid #e1f5fe;
+  width: 90%;
   max-width: 800px;
-  width: 100%;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
+  box-sizing: border-box;
 }
 
 .modal-content::before {
@@ -1205,25 +1212,54 @@ export default {
 }
 
 .modal-header h2 {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 600;
   color: #158897;
   margin: 0;
 }
 
-@media (max-width: 768px) {
+/* Media queries uniquement pour les très grands écrans */
+@media (min-width: 1400px) {
+  .header-content,
+  .actions-container,
+  .form-section,
+  .products-grid {
+    max-width: 1400px;
+  }
+  
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  }
+}
+
+/* Media queries pour les écrans moyens (tablettes) */
+@media (max-width: 1024px) {
   .actions-container {
     grid-template-columns: 1fr;
+    gap: 2rem;
   }
   
   .action-card {
-    padding: 2.5rem 2rem;
+    padding: 3rem 2rem;
   }
   
-  .header-content {
-    flex-direction: column;
-    gap: 1.5rem;
-    align-items: stretch;
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  }
+}
+
+/* Media queries uniquement pour mobile (petits écrans) */
+@media (max-width: 768px) {
+  .simple-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .action-card h3 {
+    font-size: 1.5rem;
+  }
+  
+  .action-card p {
+    font-size: 1.1rem;
   }
   
   .header-main {
@@ -1232,33 +1268,36 @@ export default {
   }
   
   .header-main h2 {
-    text-align: center;
+    font-size: 1.5rem;
   }
   
   .products-grid {
     grid-template-columns: 1fr;
-    padding: 1.5rem;
+    padding: 2rem 0;
+    gap: 1.5rem;
   }
   
   .form-grid {
     grid-template-columns: 1fr;
   }
   
-  .detail-group {
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .modal-overlay {
-    padding: 1rem;
-  }
-  
   .modal-content {
     padding: 2rem;
+    width: 95%;
   }
-  
-  .full-width-form {
-    padding: 1rem;
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .status-options {
+    flex-direction: column;
+    gap: 1rem;
   }
 }
 </style>
