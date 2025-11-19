@@ -1,8 +1,8 @@
 <template>
-  <div class="simple-container">
+  <div class="full-width-container">
     <div class="simple-header">
       <h1>Gestion des Produits</h1>
-      <p>Interface d'administration</p>
+     
     </div>
 
     <div class="main-actions" v-if="!showForm && !showList">
@@ -31,8 +31,7 @@
       </div>
     </div>
 
-    <!-- Formulaire d'ajout -->
-    <div class="layout" v-if="showForm">
+    <div class="full-width-form" v-if="showForm">
       <div class="form-section">
         <div class="form-card">
           <div class="form-header">
@@ -45,17 +44,17 @@
           </div>
 
           <form @submit.prevent="saveProduct" class="simple-form">
-            <div class="form-group">
-              <label>Nom du produit *</label>
-              <input 
-                v-model="form.name" 
-                placeholder="Nom du produit" 
-                required 
-                class="form-control"
-              />
-            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Nom du produit *</label>
+                <input 
+                  v-model="form.name" 
+                  placeholder="Nom du produit" 
+                  required 
+                  class="form-control"
+                />
+              </div>
 
-            <div class="form-row">
               <div class="form-group">
                 <label>Prix (DH) *</label>
                 <input 
@@ -80,6 +79,258 @@
                   min="0"
                 />
               </div>
+
+              <div class="form-group">
+                <label>Catégorie *</label>
+                <input 
+                  v-model="form.category" 
+                  placeholder="Catégorie" 
+                  required 
+                  class="form-control"
+                />
+              </div>
+
+              <div class="form-group full-width">
+                <label>Description</label>
+                <textarea 
+                  v-model="form.description" 
+                  placeholder="Description du produit..." 
+                  rows="4"
+                  class="form-control textarea"
+                ></textarea>
+              </div>
+
+              <div class="form-group">
+                <label>Statut du produit</label>
+                <div class="status-options">
+                  <label class="radio-option">
+                    <input 
+                      type="radio" 
+                      v-model="form.is_active" 
+                      :value="1"
+                      class="radio-input"
+                      checked
+                    />
+                    <span class="radio-custom"></span>
+                    <span class="radio-label">
+                      <span class="status-active">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="12" cy="12" r="10" fill="#10B981" stroke="#10B981" stroke-width="2"/>
+                          <path d="M8 12L11 15L16 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Actif
+                      </span>
+                    </span>
+                  </label>
+                  <label class="radio-option">
+                    <input 
+                      type="radio" 
+                      v-model="form.is_active" 
+                      :value="0"
+                      class="radio-input"
+                    />
+                    <span class="radio-custom"></span>
+                    <span class="radio-label">
+                      <span class="status-inactive">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <circle cx="12" cy="12" r="10" fill="#EF4444" stroke="#EF4444" stroke-width="2"/>
+                          <path d="M15 9L9 15M9 9L15 15" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        Inactif
+                      </span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H16.1716C16.702 3 17.2107 3.21071 17.5858 3.58579L20.4142 6.41421C20.7893 6.78929 21 7.29799 21 7.82843V19C21 20.1046 20.1046 21 19 21Z" stroke="currentColor" stroke-width="2"/>
+                  <path d="M17 21V13H7V21" stroke="currentColor" stroke-width="2"/>
+                  <path d="M7 3V8H15" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                Enregistrer le produit
+              </button>
+              
+              <button 
+                @click="hideForm" 
+                type="button" 
+                class="btn btn-secondary"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6 18L18 6M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Annuler
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="full-width-list" v-if="showList">
+      <div class="list-header">
+        <div class="header-content">
+          <div class="header-main">
+            <button @click="hideList" class="back-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Retour
+            </button>
+            <h2>Liste des produits</h2>
+            <button @click="showAddFormFromList" class="btn btn-primary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              Ajouter un produit
+            </button>
+          </div>
+          <div class="total-count">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 12H15M9 16H15M9 20H15M5 4H19C20.1046 4 21 4.89543 21 6V18C21 19.1046 20.1046 20 19 20H5C3.89543 20 3 19.1046 3 18V6C3 4.89543 3.89543 4 5 4Z" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            {{ products.length }} produit(s)
+          </div>
+        </div>
+      </div>
+
+      <div class="products-grid">
+        <div 
+          v-for="product in products" 
+          :key="product.id" 
+          :class="['product-card', { inactive: !product.is_active }]"
+        >
+          <div class="card-header">
+            <h4 class="product-name">{{ product.name }}</h4>
+            <div class="product-actions">
+              <button @click="editProduct(product)" class="action-btn edit" title="Modifier">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M18.5 2.5C18.8978 2.10217 19.4374 1.87868 20 1.87868C20.5626 1.87868 21.1022 2.10217 21.5 2.5C21.8978 2.89782 22.1213 3.43739 22.1213 4C22.1213 4.56261 21.8978 5.10217 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Modifier
+              </button>
+              <button @click="deleteProduct(product.id)" class="action-btn delete" title="Supprimer">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.21071 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M10 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M14 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Supprimer
+              </button>
+            </div>
+          </div>
+
+          <div class="card-content">
+            <div class="product-info">
+              <p class="product-category">{{ product.category }}</p>
+              <p v-if="product.description" class="product-description">
+                {{ product.description }}
+              </p>
+            </div>
+
+            <div class="product-details">
+              <div class="detail-group">
+                <div class="detail-item">
+                  <span class="detail-label">Prix</span>
+                  <span class="detail-value">{{ product.price }} DH</span>
+                </div>
+                <div class="detail-item">
+                  <span class="detail-label">Stock</span>
+                  <span :class="['detail-value', product.stock <= 5 ? 'low-stock' : '']">
+                    {{ product.stock }}
+                    <svg v-if="product.stock <= 5" width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="warning-icon">
+                      <path d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <div class="status-indicator">
+              <span :class="['status', product.is_active ? 'active' : 'inactive']">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="12" cy="12" r="10" fill="currentColor"/>
+                  <path v-if="product.is_active" d="M8 12L11 15L16 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path v-else d="M15 9L9 15M9 9L15 15" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                {{ product.is_active ? 'Actif' : 'Inactif' }}
+              </span>
+            </div>
+            <div class="product-id">#{{ product.id }}</div>
+          </div>
+        </div>
+
+        <div v-if="products.length === 0" class="empty-state">
+          <div class="empty-icon">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 7L12 3L4 7M20 7L12 11M20 7V17L12 21M12 11V21M4 7V17L12 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h4>Aucun produit enregistré</h4>
+          <p>Commencez par ajouter votre premier produit</p>
+          <button @click="showAddFormFromList" class="btn btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Ajouter un produit
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" v-if="editing">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Modifier le produit</h2>
+          <button @click="cancelEdit" class="close-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <form @submit.prevent="saveProduct" class="simple-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Nom du produit *</label>
+              <input 
+                v-model="form.name" 
+                placeholder="Nom du produit" 
+                required 
+                class="form-control"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Prix (DH) *</label>
+              <input 
+                v-model="form.price" 
+                type="number" 
+                placeholder="0.00" 
+                required 
+                class="form-control"
+                step="0.01"
+                min="0"
+              />
+            </div>
+
+            <div class="form-group">
+              <label>Stock *</label>
+              <input 
+                v-model="form.stock" 
+                type="number" 
+                placeholder="0" 
+                required 
+                class="form-control"
+                min="0"
+              />
             </div>
 
             <div class="form-group">
@@ -92,12 +343,12 @@
               />
             </div>
 
-            <div class="form-group">
+            <div class="form-group full-width">
               <label>Description</label>
               <textarea 
                 v-model="form.description" 
                 placeholder="Description du produit..." 
-                rows="3"
+                rows="4"
                 class="form-control textarea"
               ></textarea>
             </div>
@@ -111,7 +362,6 @@
                     v-model="form.is_active" 
                     :value="1"
                     class="radio-input"
-                    checked
                   />
                   <span class="radio-custom"></span>
                   <span class="radio-label">
@@ -143,252 +393,6 @@
                   </span>
                 </label>
               </div>
-            </div>
-
-            <div class="form-actions">
-              <button type="submit" class="btn btn-primary">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H16.1716C16.702 3 17.2107 3.21071 17.5858 3.58579L20.4142 6.41421C20.7893 6.78929 21 7.29799 21 7.82843V19C21 20.1046 20.1046 21 19 21Z" stroke="currentColor" stroke-width="2"/>
-                  <path d="M17 21V13H7V21" stroke="currentColor" stroke-width="2"/>
-                  <path d="M7 3V8H15" stroke="currentColor" stroke-width="2"/>
-                </svg>
-                Enregistrer le produit
-              </button>
-              
-              <button 
-                @click="hideForm" 
-                type="button" 
-                class="btn btn-secondary"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M6 18L18 6M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                Annuler
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- Liste des produits -->
-    <div class="list-section-full" v-if="showList">
-      <div class="list-header">
-        <div class="header-actions">
-          <button @click="hideList" class="back-btn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Retour
-          </button>
-          <h2>Liste des produits</h2>
-          <button @click="showAddFormFromList" class="btn btn-primary">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-            Ajouter un produit
-          </button>
-        </div>
-        <div class="total-count">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9 12H15M9 16H15M9 20H15M5 4H19C20.1046 4 21 4.89543 21 6V18C21 19.1046 20.1046 20 19 20H5C3.89543 20 3 19.1046 3 18V6C3 4.89543 3.89543 4 5 4Z" stroke="currentColor" stroke-width="2"/>
-          </svg>
-          {{ products.length }} produit(s)
-        </div>
-      </div>
-
-      <div class="products-list">
-        <div 
-          v-for="product in products" 
-          :key="product.id" 
-          :class="['product-item', { inactive: !product.is_active }]"
-        >
-          <div class="product-main">
-            <div class="product-info">
-              <h4 class="product-name">{{ product.name }}</h4>
-              <p class="product-category">{{ product.category }}</p>
-              <p v-if="product.description" class="product-description">
-                {{ product.description }}
-              </p>
-            </div>
-
-            <div class="product-meta">
-              <div class="meta-item">
-                <span class="meta-label">Prix</span>
-                <span class="meta-value">{{ product.price }} DH</span>
-              </div>
-              <div class="meta-item">
-                <span class="meta-label">Stock</span>
-                <span :class="['meta-value', product.stock <= 5 ? 'low-stock' : '']">
-                  {{ product.stock }}
-                  <svg v-if="product.stock <= 5" width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="warning-icon">
-                    <path d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                  </svg>
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div class="product-actions">
-            <div class="status-indicator">
-              <span :class="['status', product.is_active ? 'active' : 'inactive']">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="12" cy="12" r="10" fill="currentColor"/>
-                  <path v-if="product.is_active" d="M8 12L11 15L16 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path v-else d="M15 9L9 15M9 9L15 15" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                {{ product.is_active ? 'Actif' : 'Inactif' }}
-              </span>
-            </div>
-            <div class="action-buttons">
-              <button @click="editProduct(product)" class="action-btn edit" title="Modifier">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                  <path d="M18.5 2.5C18.8978 2.10217 19.4374 1.87868 20 1.87868C20.5626 1.87868 21.1022 2.10217 21.5 2.5C21.8978 2.89782 22.1213 3.43739 22.1213 4C22.1213 4.56261 21.8978 5.10217 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                Modifier
-              </button>
-              <button @click="deleteProduct(product.id)" class="action-btn delete" title="Supprimer">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                  <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.21071 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                  <path d="M10 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                  <path d="M14 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-                Supprimer
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- État vide -->
-        <div v-if="products.length === 0" class="empty-state">
-          <div class="empty-icon">
-            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M20 7L12 3L4 7M20 7L12 11M20 7V17L12 21M12 11L4 7M12 11V21M4 7V17L12 21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <h4>Aucun produit enregistré</h4>
-          <p>Commencez par ajouter votre premier produit</p>
-          <button @click="showAddFormFromList" class="btn btn-primary">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-            Ajouter un produit
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Formulaire d'édition -->
-    <div class="modal-overlay" v-if="editing">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2>Modifier le produit</h2>
-          <button @click="cancelEdit" class="close-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </button>
-        </div>
-
-        <form @submit.prevent="saveProduct" class="simple-form">
-          <div class="form-group">
-            <label>Nom du produit *</label>
-            <input 
-              v-model="form.name" 
-              placeholder="Nom du produit" 
-              required 
-              class="form-control"
-            />
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label>Prix (DH) *</label>
-              <input 
-                v-model="form.price" 
-                type="number" 
-                placeholder="0.00" 
-                required 
-                class="form-control"
-                step="0.01"
-                min="0"
-              />
-            </div>
-
-            <div class="form-group">
-              <label>Stock *</label>
-              <input 
-                v-model="form.stock" 
-                type="number" 
-                placeholder="0" 
-                required 
-                class="form-control"
-                min="0"
-              />
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Catégorie *</label>
-            <input 
-              v-model="form.category" 
-              placeholder="Catégorie" 
-              required 
-              class="form-control"
-            />
-          </div>
-
-          <div class="form-group">
-            <label>Description</label>
-            <textarea 
-              v-model="form.description" 
-              placeholder="Description du produit..." 
-              rows="3"
-              class="form-control textarea"
-            ></textarea>
-          </div>
-
-          <div class="form-group">
-            <label>Statut du produit</label>
-            <div class="status-options">
-              <label class="radio-option">
-                <input 
-                  type="radio" 
-                  v-model="form.is_active" 
-                  :value="1"
-                  class="radio-input"
-                />
-                <span class="radio-custom"></span>
-                <span class="radio-label">
-                  <span class="status-active">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="12" cy="12" r="10" fill="#10B981" stroke="#10B981" stroke-width="2"/>
-                      <path d="M8 12L11 15L16 9" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    Actif
-                  </span>
-                </span>
-              </label>
-              <label class="radio-option">
-                <input 
-                  type="radio" 
-                  v-model="form.is_active" 
-                  :value="0"
-                  class="radio-input"
-                />
-                <span class="radio-custom"></span>
-                <span class="radio-label">
-                  <span class="status-inactive">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="12" cy="12" r="10" fill="#EF4444" stroke="#EF4444" stroke-width="2"/>
-                      <path d="M15 9L9 15M9 9L15 15" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                    Inactif
-                  </span>
-                </span>
-              </label>
             </div>
           </div>
 
@@ -506,7 +510,6 @@ export default {
       };
     },
 
-    // Navigation methods
     showAddForm() {
       this.showForm = true;
       this.showList = false;
@@ -538,10 +541,12 @@ export default {
 </script>
 
 <style scoped>
-.simple-container {
+.full-width-container {
   min-height: 100vh;
   background: #f8fafc;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  width: 100%;
+  margin: 0;
   padding: 0;
 }
 
@@ -551,6 +556,7 @@ export default {
   padding: 2.5rem 0;
   text-align: center;
   box-shadow: 0 4px 12px rgba(21, 136, 151, 0.2);
+  width: 100%;
 }
 
 .simple-header h1 {
@@ -567,27 +573,27 @@ export default {
   font-weight: 300;
 }
 
-/* Page d'accueil avec boutons */
 .main-actions {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 60vh;
   padding: 3rem;
+  width: 100%;
 }
 
 .actions-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2.5rem;
-  max-width: 900px;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 3rem;
+  max-width: 1400px;
   width: 100%;
 }
 
 .action-card {
   background: white;
   border-radius: 20px;
-  padding: 3.5rem 2.5rem;
+  padding: 4rem 3rem;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -627,7 +633,7 @@ export default {
 }
 
 .action-card h3 {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   font-weight: 600;
   color: #158897;
   margin: 0 0 1.5rem 0;
@@ -635,27 +641,25 @@ export default {
 
 .action-card p {
   color: #718096;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   line-height: 1.6;
   margin: 0;
 }
 
-/* Layout pour le formulaire - Largeur agrandie */
-.layout {
-  max-width: 650px;
-  margin: 3rem auto;
-  padding: 0 2rem;
+.full-width-form {
+  width: 100%;
+  padding: 2rem;
 }
 
-/* Section Formulaire */
 .form-section {
-  position: relative;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .form-card {
   background: white;
   border-radius: 20px;
-  padding: 2.5rem;
+  padding: 3rem;
   box-shadow: 0 12px 35px rgba(21, 136, 151, 0.15);
   border: 1px solid #e1f5fe;
   position: relative;
@@ -682,7 +686,7 @@ export default {
 }
 
 .form-header h2 {
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 600;
   color: #158897;
   margin: 0;
@@ -706,11 +710,11 @@ export default {
   color: #158897;
 }
 
-/* Reste du style du formulaire */
-.simple-form {
-  display: flex;
-  flex-direction: column;
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
+  margin-bottom: 2rem;
 }
 
 .form-group {
@@ -719,19 +723,24 @@ export default {
   gap: 0.75rem;
 }
 
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
 .form-group label {
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 600;
   color: #2d3748;
 }
 
 .form-control {
-  padding: 1rem 1.25rem;
+  padding: 1.25rem 1.5rem;
   border: 2px solid #e2e8f0;
   border-radius: 12px;
-  font-size: 1rem;
+  font-size: 1.1rem;
   transition: all 0.3s ease;
   background: white;
+  width: 100%;
 }
 
 .form-control:focus {
@@ -743,15 +752,9 @@ export default {
 
 .form-control.textarea {
   resize: vertical;
-  min-height: 100px;
+  min-height: 120px;
   font-family: inherit;
   line-height: 1.5;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
 }
 
 .status-options {
@@ -764,7 +767,7 @@ export default {
   align-items: center;
   gap: 1rem;
   cursor: pointer;
-  padding: 1rem 1.25rem;
+  padding: 1rem 1.5rem;
   border-radius: 12px;
   transition: all 0.3s ease;
   border: 2px solid transparent;
@@ -806,7 +809,7 @@ export default {
 }
 
 .radio-label {
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -832,15 +835,15 @@ export default {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
-  margin-top: 1rem;
+  margin-top: 2rem;
 }
 
 .btn {
-  padding: 1rem 2rem;
+  padding: 1.25rem 2.5rem;
   border: none;
   border-radius: 12px;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.1rem;
   cursor: pointer;
   transition: all 0.3s ease;
   display: inline-flex;
@@ -872,43 +875,35 @@ export default {
   transform: translateY(-2px);
 }
 
-/* Liste des produits en plein écran - Largeur agrandie */
-.list-section-full {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 3rem;
+.full-width-list {
+  width: 100%;
+  padding: 0;
 }
 
 .list-header {
   background: white;
-  border-radius: 20px;
-  padding: 2.5rem;
-  box-shadow: 0 12px 35px rgba(21, 136, 151, 0.15);
-  border: 1px solid #e1f5fe;
-  margin-bottom: 2.5rem;
-  position: relative;
-  overflow: hidden;
+  padding: 2.5rem 3rem;
+  box-shadow: 0 4px 12px rgba(21, 136, 151, 0.15);
+  border-bottom: 1px solid #e1f5fe;
+  margin-bottom: 0;
 }
 
-.list-header::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 5px;
-  background: linear-gradient(90deg, #158897, #22b8cf);
-}
-
-.header-actions {
+.header-content {
+  max-width: 1400px;
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
 }
 
-.header-actions h2 {
-  font-size: 1.75rem;
+.header-main {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.header-main h2 {
+  font-size: 2rem;
   font-weight: 600;
   color: #158897;
   margin: 0;
@@ -947,111 +942,145 @@ export default {
   gap: 0.75rem;
 }
 
-.products-list {
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 12px 35px rgba(21, 136, 151, 0.15);
-  border: 1px solid #e1f5fe;
-  overflow: hidden;
-  position: relative;
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 2rem;
+  padding: 3rem;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-.products-list::before {
+.product-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 25px rgba(21, 136, 151, 0.15);
+  border: 1px solid #e1f5fe;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.product-card::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 5px;
+  height: 4px;
   background: linear-gradient(90deg, #158897, #22b8cf);
 }
 
-/* Styles pour les éléments de produit */
-.product-item {
-  padding: 2rem 2.5rem;
-  border-bottom: 1px solid #f1f5f9;
-  transition: all 0.3s ease;
-  position: relative;
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(21, 136, 151, 0.2);
 }
 
-.product-item:hover {
-  background: #f8fafc;
-  transform: translateX(8px);
-}
-
-.product-item.inactive {
+.product-card.inactive {
   background: #fff5f5;
   opacity: 0.8;
 }
 
-.product-item.inactive::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 5px;
-  background: #e53e3e;
-}
-
-.product-main {
+.card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 1.5rem;
 }
 
-.product-info {
-  flex: 1;
-}
-
 .product-name {
   font-size: 1.25rem;
   font-weight: 600;
   color: #2d3748;
-  margin: 0 0 0.5rem 0;
+  margin: 0;
+  flex: 1;
+}
+
+.product-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.action-btn {
+  padding: 0.5rem 1rem;
+  border: 2px solid;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: white;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.action-btn.edit {
+  color: #158897;
+  border-color: #158897;
+}
+
+.action-btn.edit:hover {
+  background: #158897;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.action-btn.delete {
+  color: #e53e3e;
+  border-color: #e53e3e;
+}
+
+.action-btn.delete:hover {
+  background: #e53e3e;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.card-content {
+  margin-bottom: 1.5rem;
 }
 
 .product-category {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #158897;
   margin: 0 0 1rem 0;
   font-weight: 600;
   background: rgba(21, 136, 151, 0.1);
   padding: 0.5rem 1rem;
-  border-radius: 15px;
+  border-radius: 12px;
   display: inline-block;
 }
 
 .product-description {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #718096;
-  line-height: 1.6;
-  margin: 0;
+  line-height: 1.5;
+  margin: 0 0 1.5rem 0;
 }
 
-.product-meta {
+.detail-group {
   display: flex;
-  gap: 2.5rem;
+  gap: 2rem;
 }
 
-.meta-item {
+.detail-item {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 0.5rem;
+  gap: 0.25rem;
 }
 
-.meta-label {
-  font-size: 0.8rem;
+.detail-label {
+  font-size: 0.75rem;
   color: #718096;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-weight: 500;
 }
 
-.meta-value {
-  font-size: 1.1rem;
+.detail-value {
+  font-size: 1rem;
   font-weight: 700;
   color: #2d3748;
   display: flex;
@@ -1059,7 +1088,7 @@ export default {
   gap: 0.25rem;
 }
 
-.meta-value.low-stock {
+.detail-value.low-stock {
   color: #e53e3e;
 }
 
@@ -1067,16 +1096,18 @@ export default {
   color: #e53e3e;
 }
 
-.product-actions {
+.card-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid #f1f5f9;
 }
 
 .status {
-  padding: 0.75rem 1.25rem;
-  border-radius: 25px;
-  font-size: 0.8rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -1097,50 +1128,13 @@ export default {
   border: 1px solid rgba(229, 62, 62, 0.3);
 }
 
-.action-buttons {
-  display: flex;
-  gap: 1rem;
-}
-
-.action-btn {
-  padding: 0.75rem 1.5rem;
-  border: 2px solid;
-  border-radius: 10px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background: white;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.action-btn.edit {
-  color: #158897;
-  border-color: #158897;
-}
-
-.action-btn.edit:hover {
-  background: #158897;
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(21, 136, 151, 0.3);
-}
-
-.action-btn.delete {
-  color: #e53e3e;
-  border-color: #e53e3e;
-}
-
-.action-btn.delete:hover {
-  background: #e53e3e;
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(229, 62, 62, 0.3);
+.product-id {
+  font-size: 0.75rem;
+  color: #9ca3af;
 }
 
 .empty-state {
+  grid-column: 1 / -1;
   padding: 5rem 2rem;
   text-align: center;
   color: #718096;
@@ -1164,7 +1158,6 @@ export default {
   opacity: 0.8;
 }
 
-/* Modal pour l'édition */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -1185,7 +1178,7 @@ export default {
   padding: 2.5rem;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
   border: 1px solid #e1f5fe;
-  max-width: 650px;
+  max-width: 800px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
@@ -1218,7 +1211,6 @@ export default {
   margin: 0;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .actions-container {
     grid-template-columns: 1fr;
@@ -1228,38 +1220,33 @@ export default {
     padding: 2.5rem 2rem;
   }
   
-  .header-actions {
+  .header-content {
     flex-direction: column;
     gap: 1.5rem;
     align-items: stretch;
   }
   
-  .header-actions h2 {
+  .header-main {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .header-main h2 {
     text-align: center;
   }
   
-  .product-main {
+  .products-grid {
+    grid-template-columns: 1fr;
+    padding: 1.5rem;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .detail-group {
     flex-direction: column;
-    gap: 1.5rem;
-  }
-  
-  .product-meta {
-    align-self: stretch;
-    justify-content: space-between;
-  }
-  
-  .meta-item {
-    align-items: flex-start;
-  }
-  
-  .product-actions {
-    flex-direction: column;
-    gap: 1.5rem;
-    align-items: stretch;
-  }
-  
-  .action-buttons {
-    justify-content: space-between;
+    gap: 1rem;
   }
   
   .modal-overlay {
@@ -1270,13 +1257,8 @@ export default {
     padding: 2rem;
   }
   
-  .layout {
-    max-width: 100%;
+  .full-width-form {
     padding: 1rem;
-  }
-  
-  .list-section-full {
-    padding: 1.5rem;
   }
 }
 </style>
